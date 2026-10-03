@@ -1,3 +1,4 @@
 import './globals.css';
+import {Analytics} from '@vercel/analytics/next';
 export const metadata={title:'Creative Gallery — Photography, Editing & Design',description:'A visual portfolio of photography, photo editing and graphic design.',keywords:['photography','photo editing','graphic design','creative portfolio'],openGraph:{title:'Creative Gallery',description:'Photography · Editing · Multimedia',type:'website'},twitter:{card:'summary_large_image',title:'Creative Gallery',description:'Photography · Editing · Multimedia'}};
-export default function RootLayout({children}){return <html lang="en"><body>{children}</body></html>}
+export default function RootLayout({children}){return <html lang="en"><body>{children}<Analytics/></body></html>}
