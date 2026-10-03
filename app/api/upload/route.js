@@ -39,7 +39,7 @@ export async function POST(req){
    uploaded++;
   }
   return Response.json({uploaded});
- }catch(e){return Response.json({error:'Upload failed.'},{status:500})}
+ }catch(e){console.error('Upload error:',e);return Response.json({error:e?.message||'Upload failed.'},{status:500})}
 }
 
 export async function DELETE(req){
