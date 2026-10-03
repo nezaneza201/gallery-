@@ -1,1 +1,1 @@
-{"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"@vercel/blob":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{}}
+{"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"@vercel/analytics":"latest","@vercel/blob":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{}}
