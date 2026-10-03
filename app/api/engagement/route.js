@@ -22,14 +22,14 @@ async function readEvents(id){
  return out.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
 }
 function summarize(events,vid){
- const latestLikes=new Map(),comments=[];
+ const latestLikes=new Map(),comments=[]; let commentCount=0;
  let views=0;
  for(const e of events){
   if(e.type==='view')views++;
   if(e.type==='like'||e.type==='unlike')latestLikes.set(e.visitorId,e.type==='like');
-  if(e.type==='comment')comments.push(e);
+  if(e.type==='comment'){commentCount++;comments.push(e);}
  }
- return {views,likes:[...latestLikes.values()].filter(Boolean).length,comments:comments.slice(-100).reverse(),liked:vid?!!latestLikes.get(vid):false};
+ return {views,likes:[...latestLikes.values()].filter(Boolean).length,commentCount,comments:comments.slice(-100).reverse(),liked:vid?!!latestLikes.get(vid):false};
 }
 export async function GET(req){
  const {searchParams}=new URL(req.url);
