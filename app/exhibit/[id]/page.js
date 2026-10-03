@@ -1,8 +1,11 @@
-export const dynamic='force-dynamic';
+'use client';
+import {useEffect,useState} from 'react';
 
-export default async function ExhibitPage({params}){
- const {id}=await params;
- return <main className="exhibitPage"><a className="backLink" href="/">← Back to the Museum</a><section className="exhibitIntro"><p className="eyebrow">CREATIVE MUSEUM · EXHIBIT</p><h1>Exhibit {id}</h1><p>Open the museum collection to explore this work and its story.</p><a href="/#work" className="museumButton">Explore the collection ↗</a></section></main>
+export default function ExhibitPage({params}){
+ const [id,setId]=useState(''),[item,setItem]=useState(null),[loading,setLoading]=useState(true),[liked,setLiked]=useState(false),[likes,setLikes]=useState(0);
+ useEffect(()=>{const run=async()=>{const p=await params;setId(p.id);const r=await fetch('/api/photos');const d=await r.json();const found=(d.photos||[]).find(x=>x.engagementId===p.id);setItem(found||null);if(found){const e=await fetch('/api/engagement?id='+encodeURIComponent(p.id));const s=await e.json();setLikes(s.likes||0);setLiked(!!s.liked)}setLoading(false)};run()},[params]);
+ const like=async()=>{const type=liked?'unlike':'like';const r=await fetch('/api/engagement',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,type})});const d=await r.json();if(r.ok){setLiked(!!d.liked);setLikes(d.likes||0)}};
+ if(loading)return <main className="exhibitPage"><p className="state">Opening exhibit…</p></main>;
+ if(!item)return <main className="exhibitPage"><a className="backLink" href="/">← Back to the Museum</a><p className="state">Exhibit not found.</p></main>;
+ return <main className="exhibitPage"><a className="backLink" href="/">← Back to the Museum</a><section className="exhibitView"><p className="eyebrow">THE CREATIVE MUSEUM · EXHIBIT</p><div className="exhibitMedia">{item.type==='before-after'?<div className="ba"><img className="baBase" src={item.afterUrl} alt="After edit"/><div className="baBefore" style={{width:'50%'}}><img src={item.beforeUrl} alt="Before edit"/></div><div className="baLabel baBeforeLabel">BEFORE</div><div className="baLabel baAfterLabel">AFTER</div></div>:<img src={item.url} alt={item.title||'Creative exhibit'}/>}</div><div className="exhibitMeta"><div><span>EXHIBIT</span><h1>{item.title||'Untitled work'}</h1><p>{item.category==='editing'?'Photo Editing':item.category.charAt(0).toUpperCase()+item.category.slice(1)} · A piece from the museum collection.</p></div><button className={liked?'liked':''} onClick={like}>♥ {likes}</button></div><div className="exhibitStory"><h2>The story behind the work.</h2><p>Every piece in The Creative Museum is part of an evolving visual practice — moments captured, images transformed and ideas shaped into design.</p></div></section><footer><span>© {new Date().getFullYear()} The Creative Museum</span><a href="/#work">Continue exploring →</a></footer></main>
 }
-
-export async function generateMetadata({params}){const {id}=await params;return {title:`Exhibit ${id} — The Creative Museum`,description:'An exhibit from The Creative Museum — photography, editing and design.'}}
