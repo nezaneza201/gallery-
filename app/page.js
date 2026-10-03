@@ -1,9 +1,9 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 
-function BeforeAfter({before,after,compact=false}){const [pos,setPos]=useState(50);return <div className={`ba ${compact?'baCompact':''}`} onClick={e=>e.stopPropagation()}><img className="baBase" src={after} alt="After edit"/><div className="baBefore" style={{width:`${pos}%`}}><img src={before} alt="Before edit"/></div><div className="baHandle" style={{left:`${pos}%`}><span>↔</span></div><input className="baRange" aria-label="Before and after slider" type="range" min="0" max="100" value={pos} onChange={e=>setPos(Number(e.target.value))}/><div className="baLabel baBeforeLabel">BEFORE</div><div className="baLabel baAfterLabel">AFTER</div></div>}
+function BeforeAfter({before,after,compact=false}){const [pos,setPos]=useState(50);return <div className={`ba ${compact?'baCompact':''}`} onClick={e=>e.stopPropagation()}><img className="baBase" src={after} alt="After edit"/><div className="baBefore" style={{width:`${pos}%`}}><img src={before} alt="Before edit"/></div><div className="baHandle" style={{left:`${pos}%`}}><span>↔</span></div><input className="baRange" aria-label="Before and after slider" type="range" min="0" max="100" value={pos} onChange={e=>setPos(Number(e.target.value))}/><div className="baLabel baBeforeLabel">BEFORE</div><div className="baLabel baAfterLabel">AFTER</div></div>}
 
-function Stats({stats}){return <small className="engagementStats"><span>♡ {stats?.likes||0}</span><span>◉ {stats?.views||0}</span><span>◌ {stats?.comments?.length||0}</span></div>}
+function Stats({stats}){return <small className="engagementStats"><span>♡ {stats?.likes||0}</span><span>◉ {stats?.views||0}</span><span>◌ {stats?.comments?.length||0}</span></small>}
 
 function ExhibitCard({p,index,onOpen,stats,onView}){
  const ref=useRef(null);
