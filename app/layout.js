@@ -1,4 +1,4 @@
 import './globals.css';
 import {Analytics} from '@vercel/analytics/next';
-export const metadata={title:'Creative Gallery — Photography, Editing & Design',description:'A visual portfolio of photography, photo editing and graphic design.',keywords:['photography','photo editing','graphic design','creative portfolio'],openGraph:{title:'Creative Gallery',description:'Photography · Editing · Multimedia',type:'website'},twitter:{card:'summary_large_image',title:'Creative Gallery',description:'Photography · Editing · Multimedia'}};
+export const metadata={title:'The Creative Museum — Photography, Editing & Design',description:'A curated museum of photography, photo editing and graphic design.',keywords:['creative museum','photography','photo editing','graphic design','digital art','visual art'],openGraph:{title:'The Creative Museum',description:'Photography · Editing · Design · Visual Art',type:'website'},twitter:{card:'summary_large_image',title:'The Creative Museum',description:'Photography · Editing · Design · Visual Art'}};
 export default function RootLayout({children}){return <html lang="en"><body>{children}<Analytics/></body></html>}
