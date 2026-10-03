@@ -22,7 +22,7 @@ export default function Home(){
  const [photos,setPhotos]=useState([]),[filter,setFilter]=useState('all'),[open,setOpen]=useState(null),[loading,setLoading]=useState(true),[stats,setStats]=useState({});
  useEffect(()=>{fetch('/api/photos').then(r=>r.json()).then(async d=>{const ps=d.photos||[];setPhotos(ps);if(ps.length){const ids=ps.map(p=>p.engagementId).filter(Boolean).join(',');const r=await fetch('/api/engagement?ids='+encodeURIComponent(ids));const x=await r.json();setStats(x.items||{})}}).finally(()=>setLoading(false))},[]);
  const cats=['all','photography','editing','design'],visible=photos.filter(p=>filter==='all'||p.category===filter),featured=photos.filter(p=>p.featured).slice(0,6),isPair=p=>p.type==='before-after';
- const onView=id=>{if(!id)return;setStats(s=>({...s,[id]:{...(s[id]||{}),views:(s[id]?.views||0)+1}}));fetch('/api/engagement',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,type:'view'})}).then(r=>r.json()).then(d=>setStats(s=>({...s,[id]:d}))).catch(()=>{})};
+ const onView=id=>{if(!id)return;setStats(s=>({...s,[id]:{...(s[id]||{}),views:(s[id]?.views||0)+1}}));fetch('/api/engagement',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,type:'view'})}).then(r=>r.json()).then(d=>setStats(s=>({...s,[id]:d}))).catch(()=>{})};
  const openExhibit=p=>{setOpen(p);fetch('/api/engagement?id='+encodeURIComponent(p.engagementId)).then(r=>r.json()).then(d=>setStats(s=>({...s,[p.engagementId]:d}))).catch(()=>{})};
  return <main>
   <header><div className="brand"><span>THE CREATIVE</span> <b>MUSEUM</b></div><p className="sub">Photography · Editing · Design</p></header>
