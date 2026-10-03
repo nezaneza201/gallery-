@@ -1,5 +1,29 @@
-import { put, del } from '@vercel/blob';
+import {put,del} from '@vercel/blob';
+import {authorized} from '../login/route';
 import crypto from 'crypto';
-function authorized(req){return (req.headers.get('cookie')||'').split(';').some(x=>x.trim()==='gallery_admin=1')}
-export async function POST(req){if(!authorized(req))return Response.json({error:'Unauthorized'},{status:401});try{const form=await req.formData();const files=form.getAll('files');const category=(form.get('category')||'photography').toString().toLowerCase().replace(/[^a-z]/g,'')||'photography';const title=(form.get('title')||'Creative work').toString().trim();if(!files.length)return Response.json({error:'Choose at least one image.'},{status:400});let uploaded=0;for(const file of files){if(!(file instanceof File)||!file.type.startsWith('image/')||file.size>15*1024*1024)continue;const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';const slug=title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)||'creative-work';await put(`gallery/${category}/${Date.now()}-${crypto.randomUUID().slice(0,8)}-${slug}.${ext}`,file,{access:'public',addRandomSuffix:false});uploaded++}return Response.json({uploaded})}catch(e){return Response.json({error:'Upload failed.'},{status:500})}}
-export async function DELETE(req){if(!authorized(req))return Response.json({error:'Unauthorized'},{status:401});try{const {url}=await req.json();await del(url);return Response.json({ok:true})}catch(e){return Response.json({error:'Delete failed.'},{status:500})}}
+export async function POST(req){
+ if(!authorized(req))return Response.json({error:'Unauthorized'},{status:401});
+ try{
+  const form=await req.formData();
+  const files=form.getAll('files');
+  const category=(form.get('category')||'photography').toString().toLowerCase().replace(/[^a-z]/g,'')||'photography';
+  const title=(form.get('title')||'Creative work').toString().trim();
+  const featured=form.get('featured')==='true';
+  if(!files.length)return Response.json({error:'Choose at least one image.'},{status:400});
+  let uploaded=0;
+  for(const file of files){
+   if(!(file instanceof File)||!file.type.startsWith('image/')||file.size>15*1024*1024)continue;
+   const ext=(file.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg';
+   const slug=title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)||'creative-work';
+   const flag=featured?'featured-':'';
+   await put('gallery/'+category+'/'+flag+Date.now()+'-'+crypto.randomUUID().slice(0,8)+'-'+slug+'.'+ext,file,{access:'public',addRandomSuffix:false});
+   uploaded++;
+  }
+  return Response.json({uploaded});
+ }catch(e){return Response.json({error:'Upload failed.'},{status:500})}
+}
+export async function DELETE(req){
+ if(!authorized(req))return Response.json({error:'Unauthorized'},{status:401});
+ try{const {url}=await req.json();await del(url);return Response.json({ok:true})}
+ catch(e){return Response.json({error:'Delete failed.'},{status:500})}
+}
