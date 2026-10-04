@@ -87,7 +87,7 @@ export default function Admin(){
   load();
  }
 
- async function remove(p){if(!confirm('Remove this exhibit from the museum?'))return;const urls=p.type==='before-after'?[p.beforeUrl,p.afterUrl]:[p.url],r=await fetch('/api/upload',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({urls})});if(r.ok)load();else setMsg('Could not remove exhibit.')}
+ async function remove(p){if(!confirm('Remove this exhibit from the museum?'))return;const urls=[],keys=p.type==='before-after'?[p.beforePath,p.afterPath]:[p.pathname];if((p.storage||'')==='r2'||(p.type==='before-after'&&(p.beforeStorage==='r2'||p.afterStorage==='r2')))keys.filter(Boolean);else urls.push(...keys.filter(Boolean));const r=await fetch('/api/upload',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify((p.storage||'')==='r2'||p.type==='before-after'?{keys:keys.filter(Boolean)}:{urls})});if(r.ok)load();else setMsg('Could not remove exhibit.')}
  const rows=photos.map(p=>({p,s:analytics[p.engagementId]||{views:0,likes:0,comments:[]}}));
  const totals=useMemo(()=>rows.reduce((a,x)=>({views:a.views+x.s.views,likes:a.likes+x.s.likes,comments:a.comments+(x.s.commentCount||0)}),{views:0,likes:0,comments:0}),[rows]);
  const mostViewed=[...rows].sort((a,b)=>b.s.views-a.s.views).slice(0,6),maxViews=mostViewed[0]?.s.views||0;
