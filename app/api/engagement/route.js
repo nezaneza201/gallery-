@@ -8,7 +8,7 @@ const BRANCH=process.env.GITHUB_MEDIA_BRANCH||'main';
 function validId(id){return typeof id==='string'&&ID_RE.test(id)}
 function headers(){return {'Accept':'application/vnd.github+json','Authorization':`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2026-03-10','Content-Type':'application/json'}}
 function visitorId(req){
- const m=req.headers.get('cookie')?.match(/(?:^|;\s*)cm_vid=([^;]+)/);
+ const m=req.headers.get('cookie')?.match(/(?:^|;\\s*)cm_vid=([^;]+)/);
  if(m)return decodeURIComponent(m[1]);
  return crypto.randomUUID();
 }
@@ -20,11 +20,16 @@ async function github(path,options={}){
  return r.json();
 }
 async function readEvents(id){
- const items=await github(`engagement/${id}?ref=${encodeURIComponent(BRANCH)}`);
- const files=Array.isArray(items)?items.filter(x=>x.type==='file'&&x.name.endsWith('.json')):[];
- const out=[];
- for(const f of files){try{const r=await fetch(f.download_url,{cache:'no-store'});if(r.ok)out.push(await r.json())}catch{}}
- return out.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+ try{
+  const items=await github(`engagement/${id}?ref=${encodeURIComponent(BRANCH)}`);
+  const files=Array.isArray(items)?items.filter(x=>x.type==='file'&&x.name.endsWith('.json')):[];
+  const out=[];
+  for(const f of files){try{const r=await fetch(f.download_url,{cache:'no-store'});if(r.ok)out.push(await r.json())}catch{}}
+  return out.sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+ }catch(err){
+  if(String(err?.message||'').includes('GitHub API 404'))return [];
+  throw err;
+ }
 }
 function summarize(events,vid){
  const latestLikes=new Map(),latestRatings=new Map(),comments=[];let views=0,shares=0;
