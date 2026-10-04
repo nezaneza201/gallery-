@@ -1,1 +1,1 @@
-{"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"@vercel/analytics":"latest","@vercel/blob":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{}}
+{"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"@aws-sdk/client-s3":"latest","@aws-sdk/s3-request-presigner":"latest","@vercel/analytics":"latest","@vercel/blob":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{}}
