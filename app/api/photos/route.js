@@ -1,5 +1,5 @@
 import {list as blobList} from '@vercel/blob';
-import {ListObjectsV2Command} from '@aws-sdk/client-s3';
+import {GetObjectCommand,ListObjectsV2Command} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import crypto from 'crypto';
 import {r2Client,R2_BUCKET,r2Configured} from '../../../lib/r2';
@@ -14,8 +14,8 @@ async function readR2(){
   const res=await s3.send(new ListObjectsV2Command({Bucket:R2_BUCKET(),Prefix:'gallery/',ContinuationToken:token}));
   for(const o of res.Contents||[]){
    if(!o.Key)continue;
-   const url=await getSignedUrl(s3,new (await import('@aws-sdk/client-s3')).GetObjectCommand({Bucket:R2_BUCKET(),Key:o.Key}),{expiresIn:3600});
-   out.push({pathname:o.Key,url,uploadedAt:o.LastModified||new Date()});
+   const url=await getSignedUrl(s3,new GetObjectCommand({Bucket:R2_BUCKET(),Key:o.Key}),{expiresIn:3600});
+   out.push({pathname:o.Key,url,uploadedAt:o.LastModified||new Date(),storage:'r2'});
   }
   token=res.IsTruncated?res.NextContinuationToken:undefined;
  }while(token);
