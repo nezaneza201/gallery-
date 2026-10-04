@@ -2,19 +2,23 @@
 import {useEffect,useMemo,useState} from 'react';
 
 async function compressImage(file){
- if(file.size<2*1024*1024)return file;
+ const target=850*1024;
+ if(file.size<=target)return file;
  return new Promise(resolve=>{
   const img=new Image(),url=URL.createObjectURL(file);
   img.onload=()=>{
-   const max=2400,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');
+   const max=2200,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');
    c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-   c.toBlob(b=>{
-    URL.revokeObjectURL(url);
-    resolve(b?new File([b],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'}):file)
-   },'image/jpeg',.86)
+   const finish=(quality)=>c.toBlob(b=>{
+    if(b&&b.size<=target||quality<=.5){
+     URL.revokeObjectURL(url);
+     resolve(b?new File([b],file.name.replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'}):file);
+    }else finish(quality-.08);
+   },'image/jpeg',quality);
+   finish(.84);
   };
-  img.src=url
+  img.src=url;
  })
 }
 
@@ -87,7 +91,17 @@ export default function Admin(){
   load();
  }
 
- async function remove(p){if(!confirm('Remove this exhibit from the museum?'))return;const urls=[],keys=p.type==='before-after'?[p.beforePath,p.afterPath]:[p.pathname];if((p.storage||'')==='r2'||(p.type==='before-after'&&(p.beforeStorage==='r2'||p.afterStorage==='r2')))keys.filter(Boolean);else urls.push(...keys.filter(Boolean));const r=await fetch('/api/upload',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify((p.storage||'')==='r2'||p.type==='before-after'?{keys:keys.filter(Boolean)}:{urls})});if(r.ok)load();else setMsg('Could not remove exhibit.')}
+ async function remove(p){
+  if(!confirm('Remove this exhibit from the museum?'))return;
+  const files=p.type==='before-after'
+   ?[{path:p.beforePath,sha:p.beforeSha},{path:p.afterPath,sha:p.afterSha}].filter(x=>x.path&&x.sha)
+   :p.storage==='github'&&p.sha?[{path:p.pathname,sha:p.sha}]:[];
+  const urls=p.storage==='blob'&&p.type!=='before-after'?[p.pathname].filter(Boolean):[];
+  const body=files.length?{files}:urls.length?{urls}:null;
+  if(!body){setMsg('This older exhibit cannot be removed from the current storage automatically.');return}
+  const r=await fetch('/api/upload',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(r.ok)load();else{const d=await r.json().catch(()=>({}));setMsg(d.error||'Could not remove exhibit.')}
+ }
  const rows=photos.map(p=>({p,s:analytics[p.engagementId]||{views:0,likes:0,comments:[]}}));
  const totals=useMemo(()=>rows.reduce((a,x)=>({views:a.views+x.s.views,likes:a.likes+x.s.likes,comments:a.comments+(x.s.commentCount||0)}),{views:0,likes:0,comments:0}),[rows]);
  const mostViewed=[...rows].sort((a,b)=>b.s.views-a.s.views).slice(0,6),maxViews=mostViewed[0]?.s.views||0;
