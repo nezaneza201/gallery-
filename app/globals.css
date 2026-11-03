@@ -93,3 +93,79 @@ main:before{animation:spotlightDrift 14s ease-in-out infinite alternate}
 .commentBox{transition:border-color .3s,transform .3s}.commentBox:focus-within{border-color:#3a3a3a;transform:translateY(-2px)}
 .comments article{animation:plaqueIn .4s ease both}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+
+/* Pixieset-inspired client gallery refresh */
+:root{color-scheme:light}
+html{scroll-behavior:smooth}
+body{background:#f7f6f2!important;color:#262520!important;font-family:'DM Sans',sans-serif}
+main{max-width:1500px;padding:0 6vw!important}
+main:before{display:none}
+.clientHeader{position:relative;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 0 22px!important;border-bottom:1px solid #e6e3dc!important}
+.clientHeader .brand{color:#292821;font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:.18em}
+.clientHeader .brand b{font-weight:600}
+.clientHeader .sub{color:#8c887f;font-size:9px;letter-spacing:.16em}
+.clientNav{display:flex;gap:28px;margin-left:auto}
+.clientNav a{font-size:11px;color:#625f57;letter-spacing:.08em}
+.clientNav a:hover{color:#111}
+.clientHero{min-height:650px!important;min-height:72vh!important;padding:100px 0 110px!important;border:0!important;position:relative}
+.clientHero>p:first-child{color:#8d887e!important;font-size:10px!important;letter-spacing:.22em!important}
+.clientHero h1{font:500 clamp(52px,8vw,108px)/.98 'Playfair Display',serif!important;letter-spacing:-.045em!important;color:#26251f;max-width:1000px}
+.clientHero .heroText{color:#77736a!important;font-size:14px!important;max-width:470px;line-height:1.9}
+.clientHero .heroLinks a{color:#39372f!important;border-color:#aaa69b!important;font-size:10px}
+.clientHero .heroLinks a:first-child{border-color:#39372f!important}
+.heroIndex{position:absolute;right:0;bottom:45px;color:#aaa69d;font-size:9px;letter-spacing:.2em}
+.sectionTitle{margin-bottom:24px!important}
+.sectionTitle p{color:#8b867c!important;font-size:10px!important;letter-spacing:.2em}
+.sectionTitle span{color:#99948a!important;font-size:11px!important}
+.clientCollections{margin:0 0 105px!important}
+.clientCollections .roomGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.clientCollections .roomGrid button{position:relative;isolation:isolate;min-height:420px!important;padding:28px!important;border:0!important;border-radius:3px!important;overflow:hidden;background:#d8d4cb!important;color:#fff!important;display:flex;justify-content:flex-end!important;align-items:flex-start}
+.roomCover,.roomShade{position:absolute;inset:0;width:100%;height:100%;z-index:-2;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.roomShade{z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.05) 15%,rgba(0,0,0,.12) 42%,rgba(0,0,0,.72) 100%)}
+.clientCollections .roomGrid button:before{display:none}
+.clientCollections .roomGrid button:after{display:none}
+.clientCollections .roomGrid button:hover .roomCover{transform:scale(1.045)}
+.clientCollections .roomGrid button small{color:rgba(255,255,255,.8)!important;font-size:9px;letter-spacing:.2em}
+.clientCollections .roomGrid button strong{font:500 clamp(27px,3vw,38px)/1.05 'Playfair Display',serif!important;color:#fff;max-width:100%;margin-top:auto}
+.clientCollections .roomGrid button .roomDescription{color:rgba(255,255,255,.8)!important;font-size:11px;max-width:270px}
+.clientCollections .roomGrid button i{color:#fff!important;border-color:rgba(255,255,255,.55)!important;font-size:9px}
+#work{padding-top:15px}
+.workTools{border-color:#e5e2da!important}
+.workTools nav{border:0!important}
+.workTools nav button{color:#8b877f!important}
+.workTools nav button.active{color:#282720!important;border-color:#282720!important}
+.searchWrap input{background:#fff!important;border:1px solid #e3e0d8!important;color:#26251f!important}
+.searchWrap button,.museumButton{background:#292820!important;color:#fff!important}
+.grid{column-gap:18px!important}
+.card span,.featuredCard span{color:#5f5c54!important}
+.card img,.featuredCard img{border-radius:2px}
+.featured{margin-bottom:85px}
+.featuredCard:after,.card:after{background:rgba(255,255,255,.92)!important;color:#333!important;border-color:#eee!important}
+.about,.artistStory{border-color:#e5e2da!important}
+.about h2,.artistStory h2{color:#292820!important}
+.about>p:not(.eyebrow),.artistStory>p{color:#77736a!important}
+.about .eyebrow,.artistStory .eyebrow{color:#99948a!important}
+.contactLinks a{border-color:#b7b2a8!important;color:#555147!important}
+footer{border-color:#e5e2da!important;color:#8b877e!important}
+footer a{color:#6c685f!important}
+.state{color:#817d74!important}
+.lightbox{background:rgba(24,23,20,.97)!important}
+.lightboxContent{background:#f7f6f2!important;border-color:#dedbd3!important}
+.lightboxContent .caption{color:#282720!important}
+.engagementActions{background:#f0eee8!important;border-color:#e0ddd5!important;color:#77736a!important}
+.engagementActions button{border-color:#d5d1c8!important;color:#4c4941!important}
+.engagementActions button.liked{color:#9d4e4e!important;border-color:#c99!important}
+.ratingRow{border-color:#e2dfd7!important;color:#77736a!important}
+.ratingRow button{color:#c7c2b8!important}
+.ratingRow button:hover,.ratingRow button.selected{color:#8d7448!important}
+.commentBox{background:#efede7!important;border-color:#dfdcd3!important}
+.commentBox h3{color:#49463e}
+.commentForm input,.commentForm textarea{background:#fff!important;border-color:#dedbd3!important;color:#26251f!important}
+.commentForm button{background:#292820!important;color:#fff!important}
+.comments article,.recentComments article,.allComments article{border-color:#dfdcd3!important}
+.comments b,.recentComments b,.allComments b{color:#39372f}
+.comments p,.recentComments p,.allComments p{color:#77736a!important}
+@media(max-width:800px){.clientHeader{flex-wrap:wrap}.clientNav{order:3;width:100%;margin:0}.clientHeader .sub{margin-left:auto}.clientCollections .roomGrid{grid-template-columns:1fr 1fr}.clientCollections .roomGrid button{min-height:340px!important}}
+@media(max-width:550px){main{padding:0 22px!important}.clientHeader{align-items:flex-start}.clientHeader .sub{width:100%;margin:0}.clientNav{gap:20px}.clientHero{min-height:580px!important;padding:90px 0!important}.clientHero h1{font-size:clamp(46px,13vw,68px)!important}.heroIndex{font-size:8px}.clientCollections .roomGrid{grid-template-columns:1fr}.clientCollections .roomGrid button{min-height:380px!important}.sectionTitle{display:block}.sectionTitle span{display:block;margin-top:5px}}
+@media(prefers-reduced-motion:reduce){.roomCover{transition:none!important}}
